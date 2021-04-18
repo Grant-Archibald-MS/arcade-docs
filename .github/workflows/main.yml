@@ -1,0 +1,57 @@
+name: Game Release and Deploy Workflow
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+    - run: |
+        mkdir ~/.npm-global
+        npm config set prefix '~/.npm-global'
+        echo export PATH=~/.npm-global/bin:$PATH > ~/.profile
+        source ~/.profile
+        export NPM_CONFIG_PREFIX=~/.npm-global
+        npm install -g pxt
+        cd test1
+        ~/.npm-global/bin/pxt target arcade
+        ~/.npm-global/bin/pxt install
+        ~/.npm-global/bin/pxt build --debug
+        cp built/debug/binary.js ../build/js
+        cd ../build
+        zip -r ../release.zip .
+        cd ..
+    - name: Create tag
+      id: create_tag
+      shell: bash
+      run: |
+        tag=$(basename "${{ github.ref }}")
+        echo "::set-output name=tag::$tag"
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.create_tag.outputs.tag }}
+        release_name: ${{ steps.create_tag.outputs.tag }}
+        draft: true
+        prerelease: false
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish WebJob
+      uses: srijken/azure-webjob-deploy@master
+      with: 
+        zip-file: release.zip
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }} 
