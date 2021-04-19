@@ -2,31 +2,38 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "resourceGroup": {
-            "value": "Games"
-        },
-        "location": {
-            "value": "westus"
-        }
-    },
-    "functions": [
-    ],
-    "variables": {
+      "resourceGroup":{
+        "type": "string",
+        "defaultValue": "Games"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "westus"
+      }
     },
     "resources": [
-        {
-            "name": "deployment-script-only",
-            "type": "Microsoft.Resources/deploymentScripts",
-            "apiVersion": "2019-10-01-preview",
-            "location": "[resourceGroup().location]",
-            "kind": "AzurePowerShell",
-            "properties": {
-                "fileUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.ps1"],
-                "commandToExecute": "powershell.exe game-deploy.ps1 \\\"[variables('resourceGroup')]\\\" \\\"[variables('location')]\\\"",
-                "azPowerShellVersion":"3.0"
-            }
+      {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2020-10-01",
+        "name": "runPowerShellInlineWithOutput",
+        "location": "[resourceGroup().location]",
+        "kind": "AzurePowerShell",
+        "properties": {
+          "forceUpdateTag": "[parameters('utcValue')]",
+          "azPowerShellVersion": "5.0",
+          "scriptContent": "$DeploymentScriptOutputs = @{}; $DeploymentScriptOutputs['text'] = $output; ./game-deploy.ps1",
+          "primaryScriptUri": "https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.ps1",
+          "arguments": "[concat('-resourceGroup', ' ', parameters('resourceGroup'), ' ', '-location', ' ', parameters('location'))]",
+          "timeout": "PT1H",
+          "cleanupPreference": "OnSuccess",
+          "retentionInterval": "P1D"
         }
+      }
     ],
     "outputs": {
+      "result": {
+        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+        "type": "string"
+      }
     }
 }
