@@ -25,7 +25,7 @@
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
           "azCliVersion": "2.15.0",
-          "scriptContent": "bash ./game-deploy.sh $resourceGroup $name",
+          "scriptContent": "bash ./game-deploy.sh $1 $2",
           "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.sh"],
           "arguments": "[concat(parameters('resourceGroup'), ' ', parameters('location'))]",
           "timeout": "PT1H",
