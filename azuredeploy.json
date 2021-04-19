@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroup": {
+            "value": "Games"
+        },
+        "location": {
+            "value": "westus"
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "deployment-script-only",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "properties": {
+                "fileUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.ps1"],
+                "commandToExecute": "powershell.exe game-deploy.ps1 \\\"[variables('resourceGroup')]\\\" \\\"[variables('location')]\\\"",
+                "azPowerShellVersion":"3.0"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
