@@ -4,8 +4,6 @@
 resourceGroup=$1
 location=$2
 
-az login
-
 echo "Create resource group $resourceGroup in $location"
 az group create --name $resourceGroup --location $location > /dev/null
 
