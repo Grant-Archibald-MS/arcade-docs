@@ -19,14 +19,14 @@
       {
         "type": "Microsoft.Resources/deploymentScripts",
         "apiVersion": "2020-10-01",
-        "name": "runPowerShellInlineWithOutput",
+        "name": "runAzureCLIInlineWithOutput",
         "location": "[resourceGroup().location]",
         "kind": "AzureCLI",
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
           "azCliVersion": "2.15.0",
           "scriptContent": "bash ./game-deploy.sh $resourceGroup $name",
-          "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.ps1"],
+          "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.sh"],
           "arguments": "[concat(parameters('resourceGroup'), ' ', parameters('location'))]",
           "timeout": "PT1H",
           "cleanupPreference": "OnSuccess",
@@ -36,7 +36,7 @@
     ],
     "outputs": {
       "result": {
-        "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+        "value": "[reference('runAzureCLIInlineWithOutput').outputs.text]",
         "type": "string"
       }
     }
