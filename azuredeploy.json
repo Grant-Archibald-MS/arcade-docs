@@ -25,7 +25,7 @@
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
           "azCliVersion": "2.15.0",
-          "scriptContent": "param([string] $resourceGroup, [string] $location); $DeploymentScriptOutputs = @{}; $DeploymentScriptOutputs['text'] = $output; & ./game-deploy.ps1 $resourceGroup $name",
+          "scriptContent": "powershell ./game-deploy.ps1 $resourceGroup $name",
           "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.ps1"],
           "arguments": "[concat('-resourceGroup', ' ', parameters('resourceGroup'), ' ', '-location', ' ', parameters('location'))]",
           "timeout": "PT1H",
