@@ -34,7 +34,7 @@
         },
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
-          "azCliVersion": "latest",
+          "azCliVersion": "2.22.0",
           "scriptContent": "bash ./game-deploy.sh $1 $2",
           "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.sh"],
           "arguments": "[concat(parameters('resourceGroup'), ' ', parameters('location'))]",
