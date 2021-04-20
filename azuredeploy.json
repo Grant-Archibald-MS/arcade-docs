@@ -13,6 +13,10 @@
       "utcValue": {
         "type": "string",
         "defaultValue": "[utcNow()]"
+      },
+      "userAssignedManagedIdentityId": {
+        "type": "string",
+        "defaultValue": ""
       }
     },
     "resources": [
@@ -31,7 +35,7 @@
         },
         "properties": {
           "forceUpdateTag": "[parameters('utcValue')]",
-          "azCliVersion": "2.22.0",
+          "azCliVersion": "latest",
           "scriptContent": "bash ./game-deploy.sh $1 $2",
           "supportingScriptUris": ["https://raw.githubusercontent.com/Grant-Archibald-MS/arcade-docs/main/game-deploy.sh"],
           "arguments": "[concat(parameters('resourceGroup'), ' ', parameters('location'))]",
